@@ -1,0 +1,18 @@
+# Runtime packages pinned from the 31011 conda environment used by VS Code.
+Flask==3.1.3
+mysql-connector-python==9.6.0
+PyMySQL==1.1.2
+pandas==2.3.3
+numpy==2.2.6
+scikit-learn==1.7.2
+scipy==1.15.3
+python-dotenv==1.2.2
+matplotlib==3.10.8
+seaborn==0.13.2
+
+# Needed to run .ipynb files inside VS Code.
+ipykernel==6.29.5
+
+# Spatial/temporal modeling packages needed for the full final project.
+statsmodels==0.14.6
+PyKrige==1.7.3

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hourly Weather Forecast</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="toolbar">
+        <div>
+          <h1>小時天氣預報</h1>
+          <p id="status">尚未載入預測資料</p>
+        </div>
+        <div class="controls">
+          <select id="variable">
+            <option value="temperature">temperature</option>
+            <option value="humidity">humidity</option>
+            <option value="wind_speed">wind_speed</option>
+            <option value="pressure">pressure</option>
+          </select>
+          <button id="run">Run Forecast</button>
+        </div>
+      </section>
+
+      <section class="forecast">
+        <div class="map" id="map"></div>
+        <aside class="panel">
+          <h2 id="selected-time">No time selected</h2>
+          <div id="summary"></div>
+        </aside>
+      </section>
+
+      <section class="timeline">
+        <input id="time-slider" type="range" min="0" max="0" value="0" />
+        <div class="time-readout" id="time-readout">--</div>
+        <div id="time-labels"></div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
