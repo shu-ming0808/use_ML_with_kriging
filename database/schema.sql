@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS predictions_hourly (
     variable_name VARCHAR(50) NOT NULL,
     kriging_pred FLOAT,
     ml_pred FLOAT,
+    fixed_half_pred FLOAT,
     fusion_pred FLOAT,
     ar_pred FLOAT,
     kriging_variance FLOAT,

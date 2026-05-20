@@ -137,6 +137,7 @@ def build_forecast_rows(df: pd.DataFrame, variable: str, hours: int, ar_max_lag:
 
     scaled_var = kriging_var / max(float(np.max(kriging_var)), 1e-9)
     fusion_weight = np.clip(scaled_var, 0.0, 1.0)
+    fixed_half_pred = 0.5 * ml_pred + 0.5 * kriging_pred
     fusion_pred = fusion_weight * ml_pred + (1.0 - fusion_weight) * kriging_pred
 
     station_ar = {}
@@ -158,6 +159,7 @@ def build_forecast_rows(df: pd.DataFrame, variable: str, hours: int, ar_max_lag:
                     "variable_name": variable,
                     "kriging_pred": float(kriging_pred[station_idx]),
                     "ml_pred": float(ml_pred[station_idx]),
+                    "fixed_half_pred": float(fixed_half_pred[station_idx]),
                     "fusion_pred": float(fusion_pred[station_idx]),
                     "ar_pred": float(ar_values[step]),
                     "kriging_variance": float(kriging_var[station_idx]),

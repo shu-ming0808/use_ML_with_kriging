@@ -7,7 +7,7 @@
 1. `01_weather_data_diagnosis_and_training.ipynb`
    - 從 MySQL 讀取最近 7 天的小時天氣 observation。
    - 判斷資料比較接近 Gaussian、trend、non-stationary，或 skewed/lognormal behavior。
-   - 執行簡化版 training/backtesting workflow，比較 Ordinary Kriging、ML、Fusion model 與 AutoAR-style temporal forecasting。
+   - 執行 paper-aligned training/backtesting workflow，比較 Ordinary Kriging、Super Learner、Optimized Fusion model 與 AutoAR-style temporal forecasting。
 
 2. `02_paper_reproduction_simulation.ipynb`
    - 依照前一份 notebook 診斷出的 data type 產生一種 synthetic spatial case。
