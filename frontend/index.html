@@ -9,34 +9,84 @@
   </head>
   <body>
     <main class="shell">
-      <section class="toolbar">
-        <div>
+      <aside class="control-panel">
+        <header>
           <h1>小時天氣預報</h1>
           <p id="status">尚未載入預測資料</p>
-        </div>
-        <div class="controls">
+        </header>
+
+        <section class="control-block">
+          <label for="variable">預測變數</label>
           <select id="variable">
             <option value="temperature">temperature</option>
             <option value="humidity">humidity</option>
             <option value="wind_speed">wind_speed</option>
             <option value="pressure">pressure</option>
           </select>
-          <button id="run">Run Forecast</button>
+        </section>
+
+        <section class="control-block">
+          <label for="model-value">顯示圖層</label>
+          <select id="model-value">
+            <option value="fusion_pred">optimized fusion</option>
+          </select>
+        </section>
+
+        <section class="control-block">
+          <label>單張顯示</label>
+          <select id="time-select"></select>
+        </section>
+
+        <section class="control-block">
+          <label>播放控制</label>
+          <div class="button-row">
+            <button id="play" type="button">播放</button>
+            <button id="pause" type="button">停止</button>
+          </div>
+          <label class="toggle-row">
+            <input id="loop" type="checkbox" checked />
+            <span>循環播放</span>
+          </label>
+        </section>
+
+        <section class="control-block speed-block">
+          <label for="speed">播放速度（秒）</label>
+          <input id="speed" type="range" min="0.2" max="2.5" step="0.1" value="1" />
+          <strong id="speed-label">1.0s</strong>
+        </section>
+
+        <section class="control-block">
+          <button id="run" type="button" class="primary">Run Forecast</button>
+        </section>
+
+        <section class="legend">
+          <h2>Surface 說明</h2>
+          <div class="legend-bar"></div>
+          <div class="legend-scale">
+            <span>低</span>
+            <span>高</span>
+          </div>
+          <p>
+            surface 由模型輸出的 station predictions 透過 IDW interpolation
+            產生，滑動時間軸可查看不同小時的空間變化。
+          </p>
+        </section>
+      </aside>
+
+      <section class="viewer">
+        <div class="map-header">
+          <strong id="selected-time">No time selected</strong>
+          <span id="selected-layer">surface</span>
         </div>
-      </section>
-
-      <section class="forecast">
-        <div class="map" id="map"></div>
-        <aside class="panel">
-          <h2 id="selected-time">No time selected</h2>
-          <div id="summary"></div>
-        </aside>
-      </section>
-
-      <section class="timeline">
-        <input id="time-slider" type="range" min="0" max="0" value="0" />
-        <div class="time-readout" id="time-readout">--</div>
-        <div id="time-labels"></div>
+        <div class="map-wrap">
+          <div class="map" id="map"></div>
+        </div>
+        <div class="timeline">
+          <input id="time-slider" type="range" min="0" max="0" value="0" />
+          <div class="time-readout" id="time-readout">--</div>
+          <div id="time-labels"></div>
+        </div>
+        <div class="summary" id="summary"></div>
       </section>
     </main>
 

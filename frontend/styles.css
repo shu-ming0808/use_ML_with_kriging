@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
   font-family: "Segoe UI", Arial, sans-serif;
-  background: #f4f6f8;
+  background: #eef2f5;
   color: #17202a;
 }
 
@@ -14,16 +14,19 @@ body {
 }
 
 .shell {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 22px;
   min-height: 100vh;
-  padding: 24px;
+  padding: 18px;
 }
 
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 18px;
+.control-panel {
+  align-self: start;
+  background: #dcecf8;
+  border: 1px solid #c5d8e8;
+  min-height: calc(100vh - 36px);
+  padding: 18px 16px;
 }
 
 h1,
@@ -33,49 +36,180 @@ p {
 }
 
 h1 {
-  font-size: 28px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 #status {
   margin-top: 6px;
-  color: #617080;
+  color: #526577;
+  line-height: 1.45;
 }
 
-.controls {
-  display: flex;
+.control-block {
+  display: grid;
   gap: 8px;
+  margin-top: 18px;
+}
+
+label {
+  color: #415368;
+  font-weight: 650;
 }
 
 select,
-button {
-  height: 38px;
-  border: 1px solid #b8c2cc;
-  border-radius: 6px;
-  background: white;
-  padding: 0 12px;
+button,
+input[type="range"] {
   font: inherit;
 }
 
-button {
-  background: #1f6feb;
-  border-color: #1f6feb;
-  color: white;
-  cursor: pointer;
+select {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid #b8c7d3;
+  border-radius: 4px;
+  background: #ffffff;
+  padding: 0 10px;
+  color: #17202a;
 }
 
-.forecast {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 18px;
-  min-height: 560px;
+button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 18px;
+  background: #5f6e7a;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0 16px;
+}
+
+button.primary {
+  width: 100%;
+  border-radius: 6px;
+  background: #1879c9;
+  font-weight: 700;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+
+.button-row button {
+  flex: 1;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.speed-block {
+  background: #1e83c8;
+  color: #ffffff;
+  margin-left: -16px;
+  margin-right: -16px;
+  padding: 18px 16px;
+}
+
+.speed-block label,
+.speed-block strong {
+  color: #ffffff;
+}
+
+.speed-block input {
+  width: 100%;
+}
+
+.legend {
+  margin-top: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(184, 199, 211, 0.7);
+  padding: 14px;
+}
+
+.legend-bar {
+  height: 16px;
+  background: linear-gradient(90deg, #2c7bb6, #abd9e9, #ffffbf, #fdae61, #d7191c);
+}
+
+.legend-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #526577;
+}
+
+.legend p {
+  margin-top: 14px;
+  color: #40515f;
+  line-height: 1.7;
+}
+
+.viewer {
+  min-width: 0;
+}
+
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 32px;
+  background: #4b4b4b;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+#selected-layer {
+  color: #d9e9f5;
+  font-size: 13px;
+}
+
+.map-wrap {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #b7c1ca;
+  border-top: 0;
 }
 
 .map {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #d2d9e0;
-  border-radius: 8px;
+  width: 100%;
+  height: min(72vh, 760px);
+  min-height: 540px;
+}
+
+.frame-viewer {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
   background: #ffffff;
+  overflow: hidden;
+}
+
+.surface-frame {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
 }
 
 .plotly-missing {
@@ -87,27 +221,10 @@ button {
   padding: 24px;
 }
 
-.panel {
-  border: 1px solid #d2d9e0;
-  border-radius: 8px;
-  background: white;
-  padding: 16px;
-  overflow: auto;
-}
-
-.metric {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid #edf0f2;
-}
-
 .timeline {
-  margin-top: 18px;
-  border: 1px solid #d2d9e0;
-  border-radius: 8px;
-  background: white;
+  margin-top: 14px;
+  border: 1px solid #cdd6df;
+  background: #ffffff;
   padding: 14px;
 }
 
@@ -118,7 +235,7 @@ button {
 .time-readout {
   margin: 8px 0;
   color: #17202a;
-  font-weight: 650;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -129,18 +246,46 @@ button {
   font-size: 13px;
 }
 
-@media (max-width: 860px) {
-  .toolbar,
-  .forecast {
-    display: block;
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.metric {
+  background: #ffffff;
+  border: 1px solid #cdd6df;
+  padding: 12px;
+}
+
+.metric span {
+  display: block;
+  color: #5d6c78;
+  font-size: 13px;
+}
+
+.metric strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+@media (max-width: 960px) {
+  .shell {
+    grid-template-columns: 1fr;
   }
 
-  .controls {
-    margin-top: 14px;
+  .control-panel {
+    min-height: 0;
   }
 
   .map {
-    min-height: 420px;
-    margin-bottom: 16px;
+    min-height: 440px;
+    height: 58vh;
+  }
+
+  .summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

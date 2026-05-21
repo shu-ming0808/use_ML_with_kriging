@@ -23,3 +23,17 @@ pip install -r requirements.txt
 ```
 
 接著在 VS Code 開啟 `.ipynb`，並選擇 project Python kernel。
+
+## Boundary GeoJSON
+
+如果要使用正式 Taiwan boundary，可以先用 `geopandas` 在 `main/` 轉檔，再輸出給 frontend：
+
+```powershell
+python main\export_boundary_geojson.py path\to\official_boundary.shp
+```
+
+輸出位置：
+
+```text
+frontend/assets/taiwan.geojson
+```
