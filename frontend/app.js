@@ -3,6 +3,11 @@ const state = {
   points: [],
   frames: [],
   frameValueColumn: "",
+  frameViewer: null,
+  frameImages: [],
+  activeFrameImage: 0,
+  activeFrameSrc: "",
+  frameRenderToken: 0,
   selectedIndex: 0,
   timer: null,
   hasFrames: false,
@@ -124,6 +129,40 @@ async function loadFrameManifest(variable) {
   }
 }
 
+function ensureFrameViewer() {
+  if (state.frameViewer && mapEl.contains(state.frameViewer)) {
+    return;
+  }
+
+  mapEl.innerHTML = "";
+  const viewer = document.createElement("div");
+  viewer.className = "frame-viewer";
+
+  state.frameImages = [0, 1].map((index) => {
+    const image = document.createElement("img");
+    image.className = "surface-frame";
+    image.alt = "";
+    image.draggable = false;
+    image.dataset.buffer = String(index);
+    viewer.appendChild(image);
+    return image;
+  });
+
+  state.frameViewer = viewer;
+  state.activeFrameImage = 0;
+  state.activeFrameSrc = "";
+  mapEl.appendChild(viewer);
+}
+
+function preloadNearbyFrames(index) {
+  [index + 1, index + 2].forEach((nextIndex) => {
+    const frame = state.frames[nextIndex];
+    if (!frame) return;
+    const image = new Image();
+    image.src = frame.src;
+  });
+}
+
 function renderFrame() {
   const frame = state.frames[state.selectedIndex];
   if (!frame) {
@@ -132,16 +171,30 @@ function renderFrame() {
     return;
   }
 
-  mapEl.innerHTML = "";
-  const viewer = document.createElement("div");
-  viewer.className = "frame-viewer";
-  const image = document.createElement("img");
-  image.className = "surface-frame";
-  image.alt = `${variableEl.value} prediction surface ${frame.time}`;
-  image.src = frame.src;
-  image.draggable = false;
-  viewer.appendChild(image);
-  mapEl.appendChild(viewer);
+  ensureFrameViewer();
+  preloadNearbyFrames(state.selectedIndex);
+
+  if (state.activeFrameSrc !== frame.src) {
+    const token = (state.frameRenderToken += 1);
+    const nextImageIndex = 1 - state.activeFrameImage;
+    const nextImage = state.frameImages[nextImageIndex];
+    const currentImage = state.frameImages[state.activeFrameImage];
+
+    nextImage.alt = `${variableEl.value} prediction surface ${frame.time}`;
+    nextImage.onload = () => {
+      if (token !== state.frameRenderToken) return;
+      currentImage.classList.remove("is-active");
+      nextImage.classList.add("is-active");
+      state.activeFrameImage = nextImageIndex;
+      state.activeFrameSrc = frame.src;
+    };
+
+    if (nextImage.getAttribute("src") === frame.src) {
+      nextImage.onload();
+    } else {
+      nextImage.src = frame.src;
+    }
+  }
 
   summaryEl.innerHTML = "";
   const metrics = [
@@ -330,6 +383,10 @@ function syncTimeControls() {
 
 async function loadPredictions() {
   stopAnimation();
+  state.frameViewer = null;
+  state.frameImages = [];
+  state.activeFrameSrc = "";
+  state.frameRenderToken += 1;
   const variable = variableEl.value;
   const hasFrames = await loadFrameManifest(variable);
   if (hasFrames) {

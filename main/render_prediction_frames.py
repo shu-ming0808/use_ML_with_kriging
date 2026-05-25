@@ -59,9 +59,12 @@ def idw_grid(points: pd.DataFrame, value_column: str, grid_size: int = 180):
     return grid_x, grid_y, xx, yy, grid_z
 
 
-def mask_grid_to_boundary(xx: np.ndarray, yy: np.ndarray, grid_z: np.ndarray, boundary: gpd.GeoDataFrame) -> np.ndarray:
+def make_land_mask(xx: np.ndarray, yy: np.ndarray, boundary: gpd.GeoDataFrame) -> np.ndarray:
     grid_points = gpd.GeoSeries(gpd.points_from_xy(xx.ravel(), yy.ravel()), crs="EPSG:4326")
-    land_mask = grid_points.within(boundary.geometry.union_all()).to_numpy().reshape(xx.shape)
+    return grid_points.within(boundary.geometry.union_all()).to_numpy().reshape(xx.shape)
+
+
+def mask_grid_to_boundary(grid_z: np.ndarray, land_mask: np.ndarray) -> np.ndarray:
     return np.where(land_mask, grid_z, np.nan)
 
 
@@ -98,21 +101,25 @@ def render_frames(
         for old_frame in output_dir.glob("frame_*.png"):
             old_frame.unlink()
 
-    times = sorted(predictions["target_datetime"].unique())
+    grouped_predictions = dict(tuple(predictions.groupby("target_datetime", sort=True)))
+    times = sorted(grouped_predictions)
     if max_frames is not None:
         times = times[:max_frames]
 
     vmin = float(predictions[value_column].quantile(0.02))
     vmax = float(predictions[value_column].quantile(0.98))
     frames = []
+    land_mask = None
 
     for index, target_time in enumerate(times):
-        frame_df = predictions[predictions["target_datetime"] == target_time].copy()
+        frame_df = grouped_predictions[target_time].copy()
         if len(frame_df) < 3:
             continue
 
         grid_x, grid_y, xx, yy, grid_z = idw_grid(frame_df, value_column=value_column)
-        masked_grid_z = mask_grid_to_boundary(xx, yy, grid_z, boundary)
+        if land_mask is None:
+            land_mask = make_land_mask(xx, yy, boundary)
+        masked_grid_z = mask_grid_to_boundary(grid_z, land_mask)
 
         fig, ax = plt.subplots(figsize=(7.2, 8), dpi=140)
         boundary.plot(ax=ax, color="#cfcfcf", edgecolor="none", zorder=1)

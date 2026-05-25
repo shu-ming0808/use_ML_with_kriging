@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pandas as pd
 from flask import Flask, jsonify, request, send_from_directory
 
 from config import settings
@@ -52,6 +53,7 @@ def predictions():
         return jsonify({"variable": variable, "times": [], "points": []})
 
     df["target_datetime"] = df["target_datetime"].astype(str)
+    df = df.astype(object).where(pd.notnull(df), None)
     return jsonify(
         {
             "variable": variable,

@@ -61,7 +61,7 @@ You can keep the SQL version in `database/schema.sql` under GitHub for reproduci
 ## Run
 
 ```powershell
-python backend\app.py
+python run_server.py
 ```
 
 Open:
